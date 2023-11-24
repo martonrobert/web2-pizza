@@ -1,0 +1,12 @@
+
+body {
+    min-height: 2000px;
+    padding-top: 70px;
+}
+
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
