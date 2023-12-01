@@ -21,8 +21,8 @@ create table rendeles (
     az int(10) unsigned not null auto_increment,
     pizzanev varchar(255) not null,
     darab int(10) unsigned not null,
-    felvetel date not null,
-    kiszallitas date not null,
+    felvetel datetime not null,
+    kiszallitas datetime null,
     primary key (az)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci COMMENT='Pizza kategóriák';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci COMMENT='Pizza rendelések';
 
