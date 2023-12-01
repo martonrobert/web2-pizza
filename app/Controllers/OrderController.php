@@ -25,12 +25,15 @@ class OrderController extends BaseController {
             $offset = 0;
 
             $orderList = $model->getOrderList((int) $closed, $limit, $offset);
+
+            $session = \Config\Services::session();
+            $orderSaved = $session->getFlashdata('orderSaved');
             
             $viewData = array('closed' => $closed, 'limit' => $limit, 'offset' => $offset);
 
             return view('templates/header')
                 . view('templates/navigation')
-                . view('orderspage', array('orderList' => $orderList, 'viewData' => $viewData))
+                . view('orderspage', array('orderList' => $orderList, 'viewData' => $viewData, 'orderSaved' => $orderSaved))
                 . view('templates/footer');
 
         } catch (\Exception $e) {
@@ -72,12 +75,33 @@ class OrderController extends BaseController {
 
             if ((string) $nev !== '' and (int) $quantity > 0) {
                 $orderId = $model->addOrder($nev, $quantity);
+                $session = \Config\Services::session();
+                $session->setFlashdata('orderSaved', 'A rendelés rögzítése sikeresen megtörtént. (ID: ' . $orderId . ')');
             }
             
-            $this->response->setHeader('Location', '/');
+            
+            header('Location: http://pizza.martonrobert.hu');
+            exit();
         } catch (\Exception $e) {
             
         }
+    }
+
+
+    public function setOrderShipped($id) {
+        try {
+            $db = \Config\Database::connect();
+            $model = new OrderModel($db);
+
+            $model->setShipped($id);
+
+            $session = \Config\Services::session();
+            $session->setFlashdata('orderSaved', 'A kiszállítás rögzítése sikeresen megtörtént. (ID: ' . $id . ')');
+
+            exit();
+        } catch (\Exception $e) {
+            
+        }        
     }
 
 }

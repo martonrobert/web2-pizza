@@ -14,13 +14,25 @@ class PizzaModel {
     }
 
 
-    public function getPizzaList() {
+    public function getPizzaList($kat = '', $term = '') {
 
-        return $this->db->query(
-                'select p.*, k.ar 
+        $params = array();
+        $sql = 'select p.*, k.ar 
                 from pizza p
                 join kategoria k on k.nev = p.kategorianev
-                order by k.ar')->getResult();
+                where 1 = 1';
+
+        if ($kat !== '') {
+            $sql .= ' and k.nev = ?';
+            $params[] = $kat;
+        }
+        if ($term !== '') {
+            $sql .= ' and p.nev like ?';
+            $params[] = '%'.$term.'%';
+        }        
+        $sql .= ' order by k.ar';
+
+        return $this->db->query($sql, $params)->getResult();
 
     }
 

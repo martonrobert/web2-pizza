@@ -1,6 +1,15 @@
 <div class="container">
-    <h2>Rendelések</h2>
-    <hr />
+    <div class="page-header">
+        <h1>Rendelések</h1>
+    </div>
+
+    <?php if (isset($orderSaved) and (string) $orderSaved !== '') : ?>
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Bezár"><span aria-hidden="true">&times;</span></button>
+        <p><?= $orderSaved ?></p>
+    </div>
+    <?php endif; ?> 
+
     <div class="">
         <form class="form-horizontal">
             <div class="form-group">
@@ -49,7 +58,7 @@
                     <td><?= $order->kiszallitas ?></td>
                     <td>
                         <?php if ($order->kiszallitas == '') : ?>
-                        <a href="/order-pizza ?>" role="button">Kiszállítva</a>
+                        <a role="button" class="shipped" data-id="<?= $order->az ?>">Kiszállítva</a>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -58,3 +67,18 @@
         </table>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('.shipped').click(function() {
+            var id = $(this).attr('data-id');
+            $.ajax({
+                url: '/orders/' + id,
+                method: 'post',
+                success: function(data) {
+                    window.location.reload();
+                }
+            });
+        });
+    });
+</script>

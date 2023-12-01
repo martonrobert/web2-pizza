@@ -30,3 +30,19 @@ $routes->post('orders', 'OrderController::setOrder');
  * Rendelések listája
  */
 $routes->get('orders', 'OrderController::getOrdersList');
+
+/**
+ * Rendelés kiszállítása
+ */
+$routes->post('orders/(:num)', 'OrderController::setOrderShipped/$1');
+
+
+/**
+ * Rólunk
+ */
+$routes->get('about', 'AboutController::index');
+
+/**
+ * Kapcsolat
+ */
+$routes->get('contact-us', 'ContactController::index');
