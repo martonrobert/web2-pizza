@@ -17,6 +17,11 @@ class OrderController extends BaseController {
     public function getOrdersList() {
 
         try {
+            if ($this->isLoggedIn == false) {
+                $this->response->redirect('/login');
+                exit();
+            }
+
             $db = \Config\Database::connect();
             $model = new OrderModel($db);
 
@@ -31,7 +36,7 @@ class OrderController extends BaseController {
             
             $viewData = array('closed' => $closed, 'limit' => $limit, 'offset' => $offset);
 
-            return view('templates/header')
+            return view('templates/header', array('auth' => $this->getAuthorizeData()))
                 . view('templates/navigation')
                 . view('orderspage', array('orderList' => $orderList, 'viewData' => $viewData, 'orderSaved' => $orderSaved))
                 . view('templates/footer');
@@ -45,6 +50,12 @@ class OrderController extends BaseController {
 
     public function newOrder($name) {
         try {
+
+            if ($this->isLoggedIn == false) {
+                $this->response->redirect('/login');
+                exit();
+            }
+
             $db = \Config\Database::connect();
             $model = new PizzaModel($db);
 
@@ -55,7 +66,7 @@ class OrderController extends BaseController {
                 'pizza' => $pizza
             );
             
-            return view('templates/header')
+            return view('templates/header', array('auth' => $this->getAuthorizeData()))
                 . view('templates/navigation')
                 . view('neworderpage', $orderData)
                 . view('templates/footer');
