@@ -37,6 +37,9 @@ abstract class BaseController extends Controller
      */
     protected $helpers = [];
 
+    protected $isLoggedIn = false;
+    protected $tokenData = null;
+
     /**
      * Be sure to declare properties for any property fetch you initialized.
      * The creation of dynamic property is deprecated in PHP 8.2.
@@ -54,5 +57,47 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();
+
+        $this->authorize();
     }
+
+    protected function authorize() {
+        helper('cookie');
+        $this->isLoggedIn = false;
+
+        $db = \Config\Database::connect();
+        $token = $this->request->getCookie('pizza-ssid');
+        log_message('error', 'Authorization:' . $token);
+
+        if ($token) {
+            $stmt = $db->query('select t.*, f.adminisztrator, f.nev, f.id as user_id, f.email 
+                                from tokens t
+                                    join felhasznalok f on f.id = t.felhasznalo_id
+                                where t.token_str = ? and t.torolt = 0 and f.allapot = ?', array($token, 'A'));
+            $this->tokenData = $stmt->getRow();
+            $this->isLoggedIn = true;
+        }
+    }
+
+    protected function getAuthorizeData() {
+        if ($this->isLoggedIn) {
+            return (object) array(
+                'isLoggedIn' => $this->isLoggedIn,
+                'userName' => $this->tokenData->nev,
+                'userId' => $this->tokenData->user_id,
+                'isAdmin' => $this->tokenData->adminisztrator,
+                'email' => $this->tokenData->email
+            );
+        }
+
+        return (object) array(
+            'isLoggedIn' => $this->isLoggedIn,
+            'userName' => '',
+            'userId' => 0,
+            'isAdmin' => 0,
+            'email' => ''
+        );        
+        
+    }
+
 }

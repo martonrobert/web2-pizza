@@ -10,6 +10,12 @@
     </div>
     <?php endif; ?> 
 
+    <?php if (!isset($auth) or $auth->isLoggedIn == false) : ?>
+    <div class="alert alert-info" role="alert">
+        <p>Rendelését a +36 20 123 4567 telefonszámra küldött SMS üzenetel tudja leadni.</p>
+    </div>
+    <?php endif; ?> 
+
     <div class="">
         <form class="form-horizontal" id="filter">
             <div class="form-group">
@@ -38,7 +44,9 @@
                     <th>Kategótia</th>
                     <th>Vega</th>
                     <th>Ár</th>
+                    <?php if (isset($auth) and $auth->isLoggedIn == true) : ?>
                     <th>&nbsp;</th>
+                    <?php endif; ?> 
                 </row>
             </thead>
             <tbody>
@@ -48,7 +56,9 @@
                     <td><?= $pizza->kategorianev ?></td>
                     <td><?= ((int) $pizza->vegetarianus == 1 ? 'igen' : 'nem') ?></td>
                     <td class="text-right"><?= number_format($pizza->ar, 2, ' ') ?></td>
+                    <?php if (isset($auth) and $auth->isLoggedIn == true) : ?>
                     <td><a href="/order-pizza/<?= $pizza->nev ?>" role="button">Rendelés</a></td>
+                    <?php endif; ?> 
                 </tr>
             <?php endforeach; ?>
             </tbody>
