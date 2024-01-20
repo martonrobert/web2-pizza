@@ -12,6 +12,26 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'HomePageController::index');
 
 /**
+ * Bejelentkezés form
+ */
+$routes->get('login', 'LoginController::login');
+
+/**
+ * Bejelentkezés
+ */
+$routes->post('login', 'LoginController::login');
+
+/**
+ * Kilépés
+ */
+$routes->get('logout', 'LoginController::logout');
+
+/**
+ * Pizza lista
+ */
+$routes->get('pizzak', 'PizzaListaController::index');
+
+/**
  * Egy konkrét pizza adatainak lekérdezése
  */
 $routes->get('pizza/(:any)', 'PizzaController::getPizza/$1');
@@ -46,3 +66,9 @@ $routes->get('about', 'AboutController::index');
  * Kapcsolat
  */
 $routes->get('contact-us', 'ContactController::index');
+
+
+/**
+ * Árfolyamok
+ */
+$routes->get('arfolyamok', 'MnbController::index');
